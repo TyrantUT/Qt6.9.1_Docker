@@ -1,0 +1,276 @@
+FROM --platform=linux/arm/v7 navikey/raspbian-bullseye as rpi
+
+RUN echo deb http://mirrors.ocf.berkeley.edu/raspbian/raspbian bullseye main contrib non-free rpi firmware | tee /etc/apt/sources.list && \
+    echo deb-src http://mirrors.ocf.berkeley.edu/raspbian/raspbian bullseye main contrib non-free rpi firmware >> /etc/apt/sources.list && \
+    echo deb http://mirror.fcix.net/raspbian/raspbian bullseye main contrib non-free rpi firmware >> /etc/apt/sources.list && \
+    echo deb-src http://mirror.fcix.net/raspbian/raspbian bullseye main contrib non-free rpi firmware >> /etc/apt/sources.list && \
+    DEBIAN_FRONTEND='noninteractive' apt-get update && \
+    DEBIAN_FRONTEND='noninteractive' apt install libc6=2.31-13+rpi1+deb11u3 -y --allow-downgrades && \
+    DEBIAN_FRONTEND='noninteractive' apt install libpam0g=1.4.0-9+deb11u1 -y --allow-downgrades && \
+    DEBIAN_FRONTEND='noninteractive' apt install libpam0g-dev=1.4.0-9+deb11u1 -y --allow-downgrades && \
+    DEBIAN_FRONTEND='noninteractive' apt install -y libboost-all-dev \
+    		libudev-dev \
+    		libinput-dev \
+    		libts-dev \
+    		libmtdev-dev \
+    		libjpeg-dev \
+    		libfontconfig1-dev \
+    		libssl-dev \
+    		libdbus-1-dev \
+    		libglib2.0-dev \
+    		libxkbcommon-dev \
+    		libegl1-mesa-dev \
+    		libgbm-dev \
+    		libgles2-mesa-dev \
+    		mesa-common-dev \
+    		libasound2-dev \
+    		libpulse-dev \
+    		gstreamer1.0-omx \
+    		libgstreamer1.0-dev \
+    		libgstreamer-plugins-base1.0-dev \
+     		gstreamer1.0-alsa \
+    		libvpx-dev \
+    		libsrtp2-dev \
+    		libsnappy-dev \
+    		libnss3-dev \
+    		"^libxcb.*" \
+    		flex \
+    		bison \
+    		libxslt-dev \
+    		ruby \
+    		gperf \
+    		libbz2-dev \
+    		libcups2-dev \
+    		libatkmm-1.6-dev \
+    		libxi6 \
+    		libxcomposite1 \
+    		libfreetype6-dev \
+    		libicu-dev \
+    		libsqlite3-dev \
+    		libxslt1-dev \
+    		libavcodec-dev \
+    		libavformat-dev \
+    		libswscale-dev \
+    		libx11-dev \
+    		freetds-dev \
+    		libsqlite3-dev \
+    		libpq-dev \
+    		libiodbc2-dev \
+    		firebird-dev \
+    		libgst-dev \
+    		libxext-dev \
+    		libxcb1 \
+    		libxcb1-dev \
+    		libx11-xcb1 \
+    		libx11-xcb-dev \
+    		libxcb-keysyms1 \
+    		libxcb-keysyms1-dev \
+    		libxcb-image0 \
+    		libxcb-image0-dev \
+    		libxcb-shm0 \
+    		libxcb-shm0-dev \
+    		libxcb-icccm4 \
+    		libxcb-icccm4-dev \
+    		libxcb-sync1 \
+    		libxcb-sync-dev \
+    		libxcb-render-util0 \
+    		libxcb-render-util0-dev \
+    		libxcb-xfixes0-dev \
+    		libxrender-dev \
+    		libxcb-shape0-dev \
+    		libxcb-randr0-dev \
+    		libxcb-glx0-dev \
+    		libxi-dev \
+    		libdrm-dev \
+    		libxcb-xinerama0 \
+    		libxcb-xinerama0-dev \
+    		libatspi2.0-dev \
+    		libxcursor-dev \
+    		libxcomposite-dev \
+    		libxdamage-dev \
+    		libxss-dev \
+    		libxtst-dev \
+    		libpci-dev \
+    		libcap-dev \
+    		libxrandr-dev \
+    		libdirectfb-dev \
+    		libaudio-dev \
+    		libxkbcommon-x11-dev \
+    		wget \
+        	pigpio \
+	        nodejs \
+	        libglew-dev \
+	        libglfw3-dev \
+	        libgles2-mesa-dev \
+	        libgbm-dev \
+	        libdrm-dev \
+	        kmscube \
+	        build-essential \
+	        cmake \
+	        unzip \
+	        pkg-config \
+	        libfreetype6-dev \
+	        libx11-dev \
+	        libx11-xcb-dev \
+	        libxext-dev \
+	        libxfixes-dev \
+	        libxi-dev \
+	        libxrender-dev \
+	        libxcb1-dev \
+	        libxcb-glx0-dev \
+	        libxcb-keysyms1-dev \
+	        libxcb-image0-dev \
+	        libxcb-shm0-dev \
+	        libxcb-icccm4-dev \
+	        libxcb-sync-dev \
+	        libxcb-xfixes0-dev \
+	        libxcb-shape0-dev \
+	        libxcb-randr0-dev \
+	        libxcb-render-util0-dev \
+	        libxcb-util-dev \
+	        libxcb-xinerama0-dev \
+	        libxcb-xkb-dev \
+	        libxkbcommon-dev \
+	        libxkbcommon-x11-dev \
+	        xorg-dev \
+	        libgtk-3-dev \
+	        libudev-dev \
+	        libinput-dev \
+	        libts-dev \
+	        libmtdev-dev \
+	        libssl-dev \
+	        libdbus-1-dev \
+	        libglib2.0-dev \
+	        libxcb-xv0-dev \
+	        libwxgtk3.0-gtk3-dev \
+	        '^libxcb.*-dev' \
+	        '^libxkb.*-dev' \
+	        autopoint \
+	        debhelper \
+	        dh-autoreconf \
+	        dh-strip-nondeterminism \
+	        dwz \
+	        intltool-debian \
+	        libarchive-zip-perl \
+	        libdebhelper-perl \
+	        libfile-stripnondeterminism-perl \
+	        libsub-override-perl \
+	        po-debconf \
+	        xutils-dev \
+	        quilt \
+	        xvfb \
+	        libcdt5 \
+	        libcgraph6 \
+	        libgts-0.7-5 \
+	        libgvc6 \
+	        libgvpr2 \
+	        liblab-gamut1 \
+	        libpathplan4 \
+	        librhash0 \
+	        comerr-dev \
+	        default-libmysqlclient-dev \
+	        firebird-dev \
+	        firebird3.0-common \
+	        firebird3.0-common-doc \
+	        freetds-common \
+	        freetds-dev \
+	        krb5-multidev \
+	        libasound2-dev \
+	        libct4 \
+	        libcups2-dev \
+	        libcupsimage2-dev \
+	        libdouble-conversion-dev \
+	        libfbclient2 \
+	        libgssrpc4 \
+	        libib-util \
+	        libkrb5-dev \
+	        libmariadb-dev-compat \
+	        libmd4c-dev \
+	        libodbc1 \
+	        libpq-dev \
+	        libpq5 \
+	        libproxy-dev \
+	        libpulse-dev \
+	        libpulse-mainloop-glib0 \
+	        libsybdb5 \
+	        libtommath1 \
+	        libzstd-dev \
+	        odbcinst \
+	        odbcinst1debian2 \
+	        pkg-kde-tools \
+	        libsqlite3-dev \
+	        libmariadb-dev \
+	        libxcb-*  \
+	        wget && \
+	dpkg --purge libraspberrypi-dev && \
+	apt-get clean
+
+FROM ubuntu:focal
+
+RUN sed -i 's/\# deb-src/deb-src/g' /etc/apt/sources.list  && \
+    apt-get update && \
+    DEBIAN_FRONTEND='noninteractive' apt-get -y install \
+        make \
+        build-essential \
+        libclang-dev \
+        ninja-build \
+        gcc \
+        git \
+        bison \
+        python3 \
+        gperf \
+        pkg-config \
+        libfontconfig1-dev \
+        libfreetype6-dev \
+        libx11-dev \
+        libx11-xcb-dev \
+        libxext-dev \
+        libxfixes-dev \
+        libxi-dev \
+        libxrender-dev \
+        libxcb1-dev \
+        libxcb-glx0-dev \
+        libxcb-keysyms1-dev \
+        libxcb-image0-dev \
+        libxcb-shm0-dev \
+        libxcb-icccm4-dev \
+        libxcb-sync-dev \
+        libxcb-xfixes0-dev \
+        libxcb-shape0-dev \
+        libxcb-randr0-dev \
+        libxcb-render-util0-dev \
+        libxcb-util-dev \
+        libxcb-xinerama0-dev \
+        libxcb-xkb-dev \
+        libxkbcommon-dev \
+        libxkbcommon-x11-dev \
+        libatspi2.0-dev \
+        libgl1-mesa-dev \
+        libglu1-mesa-dev \
+        freeglut3-dev \
+        gcc-aarch64-linux-gnu \
+        g++-aarch64-linux-gnu \
+        wget \
+        lsb-core \
+        cowsay \
+        subversion \
+        python3 \
+        python \
+        libssl-dev \
+        cmake \
+        pv && \
+        apt clean
+
+WORKDIR /build
+RUN wget -q https://raw.githubusercontent.com/riscv/riscv-poky/master/scripts/sysroot-relativelinks.py \
+        -O /usr/local/bin/sysroot-relativelinks.py && \
+        chmod +x /usr/local/bin/sysroot-relativelinks.py && \
+        mkdir -p /sysroot/usr /sysroot/opt /sysroot/lib
+
+COPY --from=rpi /lib/ /sysroot/lib/
+COPY --from=rpi /usr/include/ /sysroot/usr/include/
+COPY --from=rpi /usr/lib/ /sysroot/usr/lib/
+
+COPY build_qt6Host.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/build_qt6Host.sh
+CMD /usr/local/bin/build_qt6Host.sh
