@@ -61,6 +61,19 @@ function fetch_qt6 () {
     if [ ! -d "$SRC_DIR" ]; then
         mkdir -p "$SRC_DIR"
 
+        wget -q --progress=bar:force:noscroll --show-progress https://d13lb3tujbc8s0.cloudfront.net/onlineinstallers/qt-unified-linux-x64-4.4.2-online.run
+        chmod +x qt-unified-linux-x64-4.4.2-online.run
+
+        ./qt-unified-linux-x64-4.4.2-online.run install \
+            --root /opt/qt6 \
+            --auto-answer telemetry-question=No,AssociateCommonFiletypes=Yes \
+            --default-answer \
+            --accept-licenses \
+            --accept-obligations \
+            --email "$QT_USER" \
+            --pw "$QT_PASSWORD" \
+            --confirm-command
+
         wget -q --progress=bar:force:noscroll --show-progress https://download.qt.io/official_releases/qt/6.4/6.4.0/single/qt-everywhere-src-6.4.0.tar.xz
         pv qt-everywhere-src-6.4.0.tar.xz | tar xpJ -C "$SRC_DIR" --strip-components=1
         rm qt-everywhere-src-6.4.0.tar.xz
@@ -106,4 +119,11 @@ fetch_cross_compile_tool
 # Modify paths for build process
 /usr/local/bin/sysroot-relativelinks.py /sysroot
 fetch_qt6
-build_qt
+#build_qt
+
+: '
+docker run \
+    -e QT_USER=christopher.radoumis@gmail.com \
+    -e QT_PASSWORD= \
+    host/brewberrypi6_docker
+'
