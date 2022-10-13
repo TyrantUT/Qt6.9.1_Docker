@@ -27,8 +27,9 @@ function build_qtpi () {
     "$SRC"/qt6/configure -qpa eglfs \
             -confirm-license \
             -release \
-            -qt-host-path /opt/qt6 \
+            -qt-host-path /opt/qt6/6.4.0/gcc_64 \
             -device-option CROSS_COMPILE=/src/gcc-linaro-7.4.1-2019.02-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf- \
+            -device linux-rasp-pi4-v3d-g++ \
             -eglfs \
             -extprefix "$SRC_DIR/qt6pi" \
             -prefix /usr/local/qt5pi \
@@ -40,7 +41,6 @@ function build_qtpi () {
             -fontconfig \
             -glib \
             -make libs \
-            -no-compile-examples \
             -no-cups \
             -no-gtk \
             -no-use-gold-linker \
@@ -66,8 +66,21 @@ function build_qtpi () {
             -skip qtwebview \
             -skip qtwinextras \
             -skip wayland \
+            -skip qtdoc \
+            -skip qtmultimedia \
+            -skip qtquick3d \
+            -skip qtquick3dphysics \
             -sysroot /sysroot \
-            -recheck -- -DCMAKE_TOOLCHAIN_FILE=/usr/local/bin//toolchain.cmake -DQT_FEATURE_xcb=ON -DFEATURE_xcb_xlib=ON -DQT_FEATURE_xlib=ON
+            -- -DCMAKE_TOOLCHAIN_FILE=/usr/local/bin//toolchain.cmake \
+                -DQT_FEATURE_xcb=ON \
+                -DFEATURE_xcb_xlib=ON \
+                -DQT_FEATURE_xlib=ON \
+                -DQT_BUILD_EXAMPLES=FALSE \
+                -DQT_BUILD_TESTS=FALSE \
+                -DQT_DEBUG_FIND_PACKAGE=ON \
+                -DQt6_DIR=/opt/qt6/6.4.0/gcc_64/lib/cmake/Qt6 \
+                -DQT_ADDITIONAL_PACKAGES_PREFIX_PATH=/opt/qt6/6.4.0/gcc_64
+
 
     /usr/games/cowsay -f tux "Making QT Pi version $QT_BRANCH."
     cmake --build . --parallel "$MAKE_CORES"

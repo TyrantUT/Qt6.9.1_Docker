@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.16)
 include_guard(GLOBAL)
 
 set(CMAKE_SYSTEM_NAME Linux)
@@ -6,6 +6,7 @@ set(CMAKE_SYSTEM_PROCESSOR arm)
 
 set(TARGET_SYSROOT /sysroot)
 set(CMAKE_SYSROOT ${TARGET_SYSROOT})
+list(APPEND CMAKE_PREFIX_PATH "/opt/qt6/6.4.0/gcc_64")
 
 set(ENV{PKG_CONFIG_PATH} $PKG_CONFIG_PATH:/usr/lib/linux-gnu/pkgconfig)
 set(ENV{PKG_CONFIG_LIBDIR} /usr/lib/pkgconfig:/usr/share/pkgconfig/:${TARGET_SYSROOT}/usr/lib/linux-gnu/pkgconfig:${TARGET_SYSROOT}/usr/lib/pkgconfig)
