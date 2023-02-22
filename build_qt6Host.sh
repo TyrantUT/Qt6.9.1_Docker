@@ -21,17 +21,10 @@ mkdir -p "$SRC"
 function fetch_rpi_firmware () {
     if [ ! -d "/src/opt" ]; then
         pushd /src
-
-        # We do an `svn checkout` here as the entire git repo here is *huge*
-        # and `git` doesn't  support partial checkouts well (yet)
         svn checkout -q https://github.com/raspberrypi/firmware/trunk/opt
         popd
     fi
 
-    # We need to exclude all of these .h and android files to make QT build.
-    # In the blog post referenced, this is done using `dpkg --purge libraspberrypi-dev`,
-    # but since we're copying in the source, we're just going to exclude these from the rsync.
-    # https://www.enricozini.org/blog/2020/qt5/build-qt5-cross-builder-with-raspbian-sysroot-compiling-with-the-sysroot-continued/
     rsync \
         -aP \
         --exclude '*android*' \
@@ -103,8 +96,12 @@ function build_qt () {
 
 fetch_rpi_firmware
 fetch_cross_compile_tool
+
 # Modify paths for build process
-/usr/local/bin/sysroot-relativelinks.py /sysroot
+wget -q https://raw.githubusercontent.com/riscv/riscv-poky/master/scripts/sysroot-relativelinks.py -O /usr/local/bin/sysroot-relativelinks.py
+chmod +x /usr/local/bin/sysroot-relativelinks.py
+/usr/bin/python3 /usr/local/bin/sysroot-relativelinks.py /sysroot
+
 fetch_qt6
 build_qt
 

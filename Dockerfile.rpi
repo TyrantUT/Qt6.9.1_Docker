@@ -1,4 +1,4 @@
-FROM hostbuilt/brewberrypi6_docker
+FROM host
 
 WORKDIR /build
 

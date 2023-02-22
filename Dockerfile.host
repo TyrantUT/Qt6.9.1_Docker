@@ -1,14 +1,16 @@
 FROM --platform=linux/arm/v7 navikey/raspbian-bullseye as rpi
 
+ENV DEBIAN_FRONTEND='noninteractive'
+
 RUN echo deb http://mirrors.ocf.berkeley.edu/raspbian/raspbian bullseye main contrib non-free rpi firmware | tee /etc/apt/sources.list && \
     echo deb-src http://mirrors.ocf.berkeley.edu/raspbian/raspbian bullseye main contrib non-free rpi firmware >> /etc/apt/sources.list && \
     echo deb http://mirror.fcix.net/raspbian/raspbian bullseye main contrib non-free rpi firmware >> /etc/apt/sources.list && \
     echo deb-src http://mirror.fcix.net/raspbian/raspbian bullseye main contrib non-free rpi firmware >> /etc/apt/sources.list && \
-    DEBIAN_FRONTEND='noninteractive' apt-get update && \
-    DEBIAN_FRONTEND='noninteractive' apt install libc6=2.31-13+rpi1+deb11u3 -y --allow-downgrades && \
-    DEBIAN_FRONTEND='noninteractive' apt install libpam0g=1.4.0-9+deb11u1 -y --allow-downgrades && \
-    DEBIAN_FRONTEND='noninteractive' apt install libpam0g-dev=1.4.0-9+deb11u1 -y --allow-downgrades && \
-    DEBIAN_FRONTEND='noninteractive' apt install -y libboost-all-dev \
+    apt-get update && \
+    apt install libc6=2.31-13+rpi1+deb11u3 -y --allow-downgrades && \
+    apt install libpam0g=1.4.0-9+deb11u1 -y --allow-downgrades && \
+    apt install libpam0g-dev=1.4.0-9+deb11u1 -y --allow-downgrades && \
+    apt install -y libboost-all-dev \
     		libudev-dev \
     		libinput-dev \
     		libts-dev \
@@ -207,9 +209,11 @@ RUN echo deb http://mirrors.ocf.berkeley.edu/raspbian/raspbian bullseye main con
 
 FROM ubuntu:focal
 
+ENV DEBIAN_FRONTEND='noninteractive'
+
 RUN sed -i 's/\# deb-src/deb-src/g' /etc/apt/sources.list  && \
     apt-get update && \
-    DEBIAN_FRONTEND='noninteractive' apt-get -y install \
+     apt-get -y install \
         make \
         build-essential \
         libclang-dev \
@@ -259,13 +263,10 @@ RUN sed -i 's/\# deb-src/deb-src/g' /etc/apt/sources.list  && \
         libssl-dev \
         cmake \
         pv && \
-        apt clean
+        apt clean && \
+        mkdir -p /sysroot/usr /sysroot/opt /sysroot/lib
 
 WORKDIR /build
-RUN wget -q https://raw.githubusercontent.com/riscv/riscv-poky/master/scripts/sysroot-relativelinks.py \
-        -O /usr/local/bin/sysroot-relativelinks.py && \
-        chmod +x /usr/local/bin/sysroot-relativelinks.py && \
-        mkdir -p /sysroot/usr /sysroot/opt /sysroot/lib
 
 COPY --from=rpi /lib/ /sysroot/lib/
 COPY --from=rpi /usr/include/ /sysroot/usr/include/
