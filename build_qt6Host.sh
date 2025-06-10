@@ -5,66 +5,39 @@
 
 set -exuo pipefail
 
-BUILD_TARGET=/build/qt6_host
+BUILD_TARGET=/build/qt-hostbuild
 SRC=/src
-QT_BRANCH="6.4.0"
+QT_BRANCH_MAJOR="6.9"
+QT_BRANCH_MINOR="1"
 DEBIAN_VERSION=$(lsb_release -cs)
 MAKE_CORES="$(expr $(nproc) + 2)"
-BUILD_TARGET_PI=/build/qt6_rpi
 
 mkdir -p "$BUILD_TARGET"
-mkdir -p "$BUILD_TARGET_PI"
 mkdir -p "$SRC"
 
-/usr/games/cowsay -f tux "Building QT version $QT_BRANCH."
-
-function fetch_rpi_firmware () {
-    if [ ! -d "/src/opt" ]; then
-        pushd /src
-        svn checkout -q https://github.com/raspberrypi/firmware/trunk/opt
-        popd
-    fi
-
-    rsync \
-        -aP \
-        --exclude '*android*' \
-        --exclude 'hello_pi' \
-        --exclude '.svn' \
-        /src/opt/ /sysroot/opt/
-}
-
-
-function fetch_cross_compile_tool () {
-
-    if [ ! -d "/src/gcc-linaro-7.4.1-2019.02-x86_64_arm-linux-gnueabihf" ]; then
-        pushd /src/
-        wget -q --progress=bar:force:noscroll --show-progress https://releases.linaro.org/components/toolchain/binaries/7.4-2019.02/arm-linux-gnueabihf/gcc-linaro-7.4.1-2019.02-x86_64_arm-linux-gnueabihf.tar.xz
-        pv gcc-linaro-7.4.1-2019.02-x86_64_arm-linux-gnueabihf.tar.xz | tar xpJ
-        rm gcc-linaro-7.4.1-2019.02-x86_64_arm-linux-gnueabihf.tar.xz
-        popd
-    fi
-}
+/usr/games/cowsay -f tux "Building QT version $QT_BRANCH_MAJOR.$QT_BRANCH_MINOR."
 
 function fetch_qt6 () {
 
-    /usr/games/cowsay -f tux "Fetching QT $QT_BRANCH."
-    local SRC_DIR="/src/qt6"
-    pushd /src 
+    /usr/games/cowsay -f tux "Fetching QT $QT_BRANCH_MAJOR.$QT_BRANCH_MINOR."
+    
+    local SRC_DIR="$SRC/qt6"
+    pushd $SRC
 
     if [ ! -d "$SRC_DIR" ]; then
         mkdir -p "$SRC_DIR"
 
-        wget -q --progress=bar:force:noscroll --show-progress https://download.qt.io/official_releases/qt/6.4/6.4.0/single/qt-everywhere-src-6.4.0.tar.xz
-        pv qt-everywhere-src-6.4.0.tar.xz | tar xpJ -C "$SRC_DIR" --strip-components=1
-        rm qt-everywhere-src-6.4.0.tar.xz
+        wget -q --progress=bar:force:noscroll --show-progress "https://download.qt.io/official_releases/qt/$QT_BRANCH_MAJOR/$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR/single/qt-everywhere-src-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR.tar.xz"
+        pv qt-everywhere-src-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR.tar.xz | tar xpJ -C "$SRC_DIR" --strip-components=1
+        rm qt-everywhere-src-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR.tar.xz
     else
         echo "DO NOTHING"
     fi
     popd
 }
 
-function build_qt () {
-    
+function configure_qt () {
+
     pushd "$BUILD_TARGET"
     local SRC_DIR="/src/qt6"
 
@@ -73,9 +46,9 @@ function build_qt () {
         -DQT_BUILD_EXAMPLES=OFF \
         -DINPUT_opengl=es2 \
         -DQT_BUILD_TESTS=OFF \
+        -DBUILD_qttools=OFF \
         -DBUILD_qtdoc=OFF \
         -DBUILD_qttranslations=OFF \
-        -DBUILD_qttools=OFF \
         -DBUILD_qtwebchannel=OFF \
         -DBUILD_qtwebengine=OFF \
         -DBUILD_qtwebview=OFF \
@@ -83,25 +56,64 @@ function build_qt () {
         -DBUILD_qtvirtualkeyboard=OFF \
         -DBUILD_qtwebchannel=OFF \
         -DBUILD_qtspeech=OFF \
-        -DCMAKE_INSTALL_PREFIX=/opt/qt6
+        -DBUILD_qtsql=OFF \
+        -DBUILD_qtdbus=OFF \
+        -DBUILD_qtxml=OFF \
+        -DBUILD_qtjpeg=OFF \
+        -DBUILD_qtlanguageserver=OFF \
+        -DBUILD_qtwebsockets=OFF \
+        -DBUILD_qthttpserver=OFF \
+        -DBUILD_qtserialport=OFF \
+        -DBUILD_qtpositioning=OFF \
+        -DBUILD_qtlocation=OFF \
+        -DBUILD_qtlottie=OFF \
+        -DBUILD_qtmqtt=OFF \
+        -DBUILD_qtremoteobjects=OFF \
+        -DBUILD_qtserialbus=OFF \
+        -DBUILD_qtsvg=OFF \
+        -DBUILD_qtwayland=OFF \
+        -DBUILD_qtcoap=OFF \
+        -DBUILD_qt5compat=OFF \
+        -DBUILD_qtconnectivity=OFF \
+        -DBUILD_qtrpc=OFF=OFF \
+        -DBUILD_qtimageformats=OFF \
+        -DBUILD_qtopcua=OFF \
+        -DBUILD_qtnetworkauth=OFF \
+        -DBUILD_qtactiveqt=OFF \
+        -DBUILD_qtgrpc=OFF \
+        -DBUILD_qtscxml=OFF \
+        -DCMAKE_INSTALL_PREFIX=/build/qt-host
+}
 
-    /usr/games/cowsay -f tux "Making QT version $QT_BRANCH."
+function cmake_qt () {
+    pushd "$BUILD_TARGET"
 
-    cmake --build . --parallel "$MAKE_CORES"
+    /usr/games/cowsay -f tux "Making QT version $QT_BRANCH_MAJOR.$QT_BRANCH_MINOR. with $MAKE_CORES Cores."
 
-    /usr/games/cowsay -f tux "Installing QT version $QT_BRANCH."
+    cmake --build . --parallel "$MAKE_CORES" --verbose
+}
+
+function install_qt () {
+    pushd "$BUILD_TARGET"
+
+    /usr/games/cowsay -f tux "Installing QT version $QT_BRANCH_MAJOR.$QT_BRANCH_MINOR."
+
     cmake --install .
+
     popd
 }
 
-fetch_rpi_firmware
-fetch_cross_compile_tool
-
 # Modify paths for build process
-wget -q https://raw.githubusercontent.com/riscv/riscv-poky/master/scripts/sysroot-relativelinks.py -O /usr/local/bin/sysroot-relativelinks.py
-chmod +x /usr/local/bin/sysroot-relativelinks.py
-/usr/bin/python3 /usr/local/bin/sysroot-relativelinks.py /sysroot
+symlinks -rc /sysroot
 
+# Get a fresh copy of QT
 fetch_qt6
-build_qt
 
+# Configure Qt
+configure_qt
+
+# Make Qt
+cmake_qt
+
+# Install Qt
+install_qt

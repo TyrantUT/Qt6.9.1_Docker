@@ -5,34 +5,31 @@
 
 set -exuo pipefail
 
-BUILD_TARGET=/build/qt6_host
 SRC=/src
-QT_BRANCH="6.4.0"
+QT_BRANCH_MAJOR="6.9"
+QT_BRANCH_MINOR="1"
 DEBIAN_VERSION=$(lsb_release -cs)
-MAKE_CORES="$(expr $(nproc) + 2)"
-BUILD_TARGET_PI=/build/qt6_rpi
+MAKE_CORES="$(expr $(nproc))"
+BUILD_TARGET_PI=/build/qtpi-build
 
 mkdir -p "$BUILD_TARGET_PI"
 
-/usr/games/cowsay -f tux "Building QT version $QT_BRANCH."
+/usr/games/cowsay -f tux "Building QT version $QT_BRANCH_MAJOR.$QT_BRANCH_MINOR."
 
 function build_qtpi () {
-
-    local SRC_DIR="/src/qt6pi"
-
-    mkdir -p "$SRC_DIR"
+    local SRC_DIR="$SRC/qt6"
 
     pushd "$BUILD_TARGET_PI"
 
-    "$SRC"/qt6/configure -qpa eglfs \
+    "$SRC_DIR"/configure -qpa eglfs \
             -confirm-license \
             -release \
-            -qt-host-path /opt/qt6/6.4.0/gcc_64 \
-            -device-option CROSS_COMPILE=/src/gcc-linaro-7.4.1-2019.02-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf- \
-            -device linux-rasp-pi4-v3d-g++ \
+            -qt-host-path /build/qt-host \
+            -device-option CROSS_COMPILE=aarch64-linux-gnu- \
+            -device linux-rasp-pi4-aarch64 \
             -eglfs \
-            -extprefix "$SRC_DIR/qt6pi" \
-            -prefix /usr/local/qt5pi \
+            -extprefix /build/qt-raspi \
+            -prefix /usr/local/qt6 \
             -pkg-config \
             -qt-pcre \
             -no-pch \
@@ -47,54 +44,63 @@ function build_qtpi () {
             -nomake examples \
             -nomake tests \
             -opensource \
+            -skip qttools \
+            -skip qtdoc \
+            -skip qttranslations \
+            -skip qtwebchannel \
             -skip qtwebengine \
-            -skip qtandroidextras \
-            -skip qtgamepad \
+            -skip qtwebview \
+            -skip qtsensors \
+            -skip qtvirtualkeyboard \
+            -skip qtwebchannel \
+            -skip qtspeech \
+            -skip qtsql \
+            -skip qtdbus \
+            -skip qtxml \
+            -skip qtjpeg \
+            -skip qtlanguageserver \
+            -skip qtwebsockets \
+            -skip qthttpserver \
+            -skip qtserialport \
+            -skip qtpositioning \
             -skip qtlocation \
             -skip qtlottie \
-            -skip qtmacextras \
-            -skip qtpurchasing \
-            -skip qtscxml \
-            -skip qtsensors \
+            -skip qtmqtt \
+            -skip qtremoteobjects \
             -skip qtserialbus \
-            -skip qtserialport \
-            -skip qtspeech \
-            -skip qttools \
-            -skip qttranslations \
-            -skip qtvirtualkeyboard \
+            -skip qtsvg \
             -skip qtwayland \
-            -skip qtwebview \
-            -skip qtwinextras \
-            -skip wayland \
-            -skip qtdoc \
-            -skip qtmultimedia \
-            -skip qtquick3d \
-            -skip qtquick3dphysics \
+            -skip qtcoap \
+            -skip qt5compat \
+            -skip qtconnectivity \
+            -skip qtrpc=OFF \
+            -skip qtimageformats \
+            -skip qtopcua \
+            -skip qtnetworkauth \
+            -skip qtactiveqt \
+            -skip qtgrpc \
+            -skip qtscxml \
             -sysroot /sysroot \
-            -- -DCMAKE_TOOLCHAIN_FILE=/usr/local/bin//toolchain.cmake \
+            -- -DCMAKE_TOOLCHAIN_FILE=/build/toolchain.cmake \
                 -DQT_FEATURE_xcb=ON \
                 -DFEATURE_xcb_xlib=ON \
-                -DQT_FEATURE_xlib=ON \
-                -DQT_BUILD_EXAMPLES=FALSE \
-                -DQT_BUILD_TESTS=FALSE \
-                -DQT_DEBUG_FIND_PACKAGE=ON \
-                -DQt6_DIR=/opt/qt6/6.4.0/gcc_64/lib/cmake/Qt6 \
-                -DQT_ADDITIONAL_PACKAGES_PREFIX_PATH=/opt/qt6/6.4.0/gcc_64
+                -DQT_FEATURE_xlib=ON
 
 
-    /usr/games/cowsay -f tux "Making QT Pi version $QT_BRANCH."
+    /usr/games/cowsay -f tux "Making QT Pi version $QT_BRANCH_MAJOR.$QT_BRANCH_MINOR."
+
     cmake --build . --parallel "$MAKE_CORES"
 
-    /usr/games/cowsay -f tux "Installing QT Pi version $QT_BRANCH."
+    /usr/games/cowsay -f tux "Installing QT Pi version $QT_BRANCH_MAJOR.$QT_BRANCH_MINOR."
     cmake --install .
     popd
 
     pushd "$SRC_DIR"
-    tar cfz "$BUILD_TARGET_PI/qt5-$QT_BRANCH-$DEBIAN_VERSION-$1.tar.gz" qt6pi
+    tar cfz "$BUILD_TARGET_PI/qt6-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR-$DEBIAN_VERSION-$1.tar.gz" qt6pi
     popd
 
     pushd "$BUILD_TARGET_PI"
-    sha256sum "qt5-$QT_BRANCH-$DEBIAN_VERSION-$1.tar.gz" > "qt5-$QT_BRANCH-$DEBIAN_VERSION-$1.tar.gz.sha256"
+    sha256sum "qt6-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR-$DEBIAN_VERSION-$1.tar.gz" > "qt6-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR-$DEBIAN_VERSION-$1.tar.gz.sha256"
     popd
 }
 

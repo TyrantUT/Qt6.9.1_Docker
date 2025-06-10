@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.18)
 include_guard(GLOBAL)
 
 set(CMAKE_SYSTEM_NAME Linux)
@@ -6,21 +6,20 @@ set(CMAKE_SYSTEM_PROCESSOR arm)
 
 set(TARGET_SYSROOT /sysroot)
 set(CMAKE_SYSROOT ${TARGET_SYSROOT})
-list(APPEND CMAKE_PREFIX_PATH "/opt/qt6/6.4.0/gcc_64")
 
-set(ENV{PKG_CONFIG_PATH} $PKG_CONFIG_PATH:/usr/lib/linux-gnu/pkgconfig)
-set(ENV{PKG_CONFIG_LIBDIR} /usr/lib/pkgconfig:/usr/share/pkgconfig/:${TARGET_SYSROOT}/usr/lib/linux-gnu/pkgconfig:${TARGET_SYSROOT}/usr/lib/pkgconfig)
+set(ENV{PKG_CONFIG_PATH} $PKG_CONFIG_PATH:/usr/lib/aarch64-linux-gnu/pkgconfig)
+set(ENV{PKG_CONFIG_LIBDIR} /usr/lib/pkgconfig:/usr/share/pkgconfig/:${TARGET_SYSROOT}/usr/lib/aarch64-linux-gnu/pkgconfig:${TARGET_SYSROOT}/usr/lib/pkgconfig)
 set(ENV{PKG_CONFIG_SYSROOT_DIR} ${CMAKE_SYSROOT})
 
 # if you use other version of gcc and g++ than gcc/g++ 9, you must change the following variables
-set(CMAKE_C_COMPILER /src/gcc-linaro-7.4.1-2019.02-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc)
-set(CMAKE_CXX_COMPILER /src/gcc-linaro-7.4.1-2019.02-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-g++)
+set(CMAKE_C_COMPILER /usr/bin/aarch64-linux-gnu-gcc-9)
+set(CMAKE_CXX_COMPILER /usr/bin/aarch64-linux-gnu-g++-9)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -I${TARGET_SYSROOT}/usr/include")
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS}")
 
-set(QT_COMPILER_FLAGS "-march=armv7-a -mfpu=neon -mfloat-abi=hard")
-set(QT_COMPILER_FLAGS_RELEASE "-O2 -pipe")
+set(QT_COMPILER_FLAGS "-march=armv8-a")
+set(QT_COMPILER_FLAGS_RELEASE "-O2 -pipe -DNDEBUG")
 set(QT_LINKER_FLAGS "-Wl,-O1 -Wl,--hash-style=gnu -Wl,--as-needed")
 
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
@@ -57,25 +56,22 @@ endfunction()
 set(XCB_PATH_VARIABLE ${TARGET_SYSROOT})
 
 set(GL_INC_DIR ${TARGET_SYSROOT}/usr/include)
-set(GL_LIB_DIR ${TARGET_SYSROOT}:${TARGET_SYSROOT}/usr/lib/linux-gnu/:${TARGET_SYSROOT}/usr:${TARGET_SYSROOT}/usr/lib)
+set(GL_LIB_DIR ${TARGET_SYSROOT}:${TARGET_SYSROOT}/usr/lib/aarch64-linux-gnu/:${TARGET_SYSROOT}/usr:${TARGET_SYSROOT}/usr/lib)
 
 set(EGL_INCLUDE_DIR ${GL_INC_DIR})
-set(EGL_LIBRARY ${XCB_PATH_VARIABLE}/usr/lib/linux-gnu/libEGL.so)
+set(EGL_LIBRARY ${XCB_PATH_VARIABLE}/usr/lib/aarch64-linux-gnu/libEGL.so)
 
 set(OPENGL_INCLUDE_DIR ${GL_INC_DIR})
-set(OPENGL_opengl_LIBRARY ${XCB_PATH_VARIABLE}/usr/lib/linux-gnu/libOpenGL.so)
+set(OPENGL_opengl_LIBRARY ${XCB_PATH_VARIABLE}/usr/lib/aarch64-linux-gnu/libOpenGL.so)
 
 set(GLESv2_INCLUDE_DIR ${GL_INC_DIR})
-set(GLIB_LIBRARY ${XCB_PATH_VARIABLE}/usr/lib/linux-gnu/libGLESv2.so)
-
-set(GLESv2_INCLUDE_DIR ${GL_INC_DIR})
-set(GLESv2_LIBRARY ${XCB_PATH_VARIABLE}/usr/lib/linux-gnu/libGLESv2.so)
+set(GLESv2_LIBRARY ${XCB_PATH_VARIABLE}/usr/lib/aarch64-linux-gnu/libGLESv2.so)
 
 set(gbm_INCLUDE_DIR ${GL_INC_DIR})
-set(gbm_LIBRARY ${XCB_PATH_VARIABLE}/usr/lib/linux-gnu/libgbm.so)
+set(gbm_LIBRARY ${XCB_PATH_VARIABLE}/usr/lib/aarch64-linux-gnu/libgbm.so)
 
 set(Libdrm_INCLUDE_DIR ${GL_INC_DIR})
-set(Libdrm_LIBRARY ${XCB_PATH_VARIABLE}/usr/lib/linux-gnu/libdrm.so)
+set(Libdrm_LIBRARY ${XCB_PATH_VARIABLE}/usr/lib/aarch64-linux-gnu/libdrm.so)
 
 set(XCB_XCB_INCLUDE_DIR ${GL_INC_DIR})
-set(XCB_XCB_LIBRARY ${XCB_PATH_VARIABLE}/usr/lib/linux-gnu/libxcb.so)
+set(XCB_XCB_LIBRARY ${XCB_PATH_VARIABLE}/usr/lib/aarch64-linux-gnu/libxcb.so)

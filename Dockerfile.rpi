@@ -3,6 +3,6 @@ FROM host
 WORKDIR /build
 
 COPY build_qt6Rpi.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/build_qt6Rpi.sh
 COPY toolchain.cmake /usr/local/bin/
+RUN chmod +x /usr/local/bin/build_qt6Rpi.sh
 CMD /usr/local/bin/build_qt6Rpi.sh
