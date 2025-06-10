@@ -19,7 +19,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -I${TARGET_SYSROOT}/usr/include")
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS}")
 
 set(QT_COMPILER_FLAGS "-march=armv8-a")
-set(QT_COMPILER_FLAGS_RELEASE "-O2 -pipe -DNDEBUG")
+set(QT_COMPILER_FLAGS_RELEASE "-O2 -pipe")
 set(QT_LINKER_FLAGS "-Wl,-O1 -Wl,--hash-style=gnu -Wl,--as-needed")
 
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)

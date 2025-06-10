@@ -10,7 +10,7 @@ SRC=/src
 QT_BRANCH_MAJOR="6.9"
 QT_BRANCH_MINOR="1"
 DEBIAN_VERSION=$(lsb_release -cs)
-MAKE_CORES="$(expr $(nproc) + 2)"
+MAKE_CORES="$(expr $(nproc))"
 
 mkdir -p "$BUILD_TARGET"
 mkdir -p "$SRC"
@@ -27,9 +27,14 @@ function fetch_qt6 () {
     if [ ! -d "$SRC_DIR" ]; then
         mkdir -p "$SRC_DIR"
 
-        wget -q --progress=bar:force:noscroll --show-progress "https://download.qt.io/official_releases/qt/$QT_BRANCH_MAJOR/$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR/single/qt-everywhere-src-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR.tar.xz"
-        pv qt-everywhere-src-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR.tar.xz | tar xpJ -C "$SRC_DIR" --strip-components=1
-        rm qt-everywhere-src-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR.tar.xz
+        git clone https://code.qt.io/qt/qt5.git $SRC_DIR
+
+        pushd $SRC_DIR
+
+        git switch $QT_BRANCH_MAJOR.$QT_BRANCH_MINOR
+        perl init-repository --module-subset=qtbase,qtcharts,qtdeclarative,qtgraphs,qtquick3d,qtshadertools
+
+        popd
     else
         echo "DO NOTHING"
     fi
@@ -40,49 +45,27 @@ function configure_qt () {
 
     pushd "$BUILD_TARGET"
     local SRC_DIR="/src/qt6"
+    local TAG_FILE="/usr/local/build.tag"
 
-    cmake "$SRC_DIR" -GNinja \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DQT_BUILD_EXAMPLES=OFF \
-        -DINPUT_opengl=es2 \
-        -DQT_BUILD_TESTS=OFF \
-        -DBUILD_qttools=OFF \
-        -DBUILD_qtdoc=OFF \
-        -DBUILD_qttranslations=OFF \
-        -DBUILD_qtwebchannel=OFF \
-        -DBUILD_qtwebengine=OFF \
-        -DBUILD_qtwebview=OFF \
-        -DBUILD_qtsensors=OFF \
-        -DBUILD_qtvirtualkeyboard=OFF \
-        -DBUILD_qtwebchannel=OFF \
-        -DBUILD_qtspeech=OFF \
-        -DBUILD_qtsql=OFF \
-        -DBUILD_qtdbus=OFF \
-        -DBUILD_qtxml=OFF \
-        -DBUILD_qtjpeg=OFF \
-        -DBUILD_qtlanguageserver=OFF \
-        -DBUILD_qtwebsockets=OFF \
-        -DBUILD_qthttpserver=OFF \
-        -DBUILD_qtserialport=OFF \
-        -DBUILD_qtpositioning=OFF \
-        -DBUILD_qtlocation=OFF \
-        -DBUILD_qtlottie=OFF \
-        -DBUILD_qtmqtt=OFF \
-        -DBUILD_qtremoteobjects=OFF \
-        -DBUILD_qtserialbus=OFF \
-        -DBUILD_qtsvg=OFF \
-        -DBUILD_qtwayland=OFF \
-        -DBUILD_qtcoap=OFF \
-        -DBUILD_qt5compat=OFF \
-        -DBUILD_qtconnectivity=OFF \
-        -DBUILD_qtrpc=OFF=OFF \
-        -DBUILD_qtimageformats=OFF \
-        -DBUILD_qtopcua=OFF \
-        -DBUILD_qtnetworkauth=OFF \
-        -DBUILD_qtactiveqt=OFF \
-        -DBUILD_qtgrpc=OFF \
-        -DBUILD_qtscxml=OFF \
-        -DCMAKE_INSTALL_PREFIX=/build/qt-host
+
+    if [ ! -f "$TAG_FILE" ]; then
+
+        # Modify paths for build process
+        symlinks -rc /sysroot
+
+        cmake "$SRC_DIR" -GNinja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DQT_BUILD_EXAMPLES=OFF \
+            -DINPUT_opengl=es2 \
+            -DQT_BUILD_TESTS=OFF \
+            -DCMAKE_INSTALL_PREFIX=/build/qt-host \
+            -DCMAKE_CXX_FLAGS="-O2"
+
+        touch "$TAG_FILE"
+
+    else
+        echo "DO NOTHING"
+    fi
 }
 
 function cmake_qt () {
@@ -103,8 +86,6 @@ function install_qt () {
     popd
 }
 
-# Modify paths for build process
-symlinks -rc /sysroot
 
 # Get a fresh copy of QT
 fetch_qt6
