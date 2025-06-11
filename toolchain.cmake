@@ -11,9 +11,9 @@ set(ENV{PKG_CONFIG_PATH} $PKG_CONFIG_PATH:/usr/lib/aarch64-linux-gnu/pkgconfig)
 set(ENV{PKG_CONFIG_LIBDIR} /usr/lib/pkgconfig:/usr/share/pkgconfig/:${TARGET_SYSROOT}/usr/lib/aarch64-linux-gnu/pkgconfig:${TARGET_SYSROOT}/usr/lib/pkgconfig)
 set(ENV{PKG_CONFIG_SYSROOT_DIR} ${CMAKE_SYSROOT})
 
-# if you use other version of gcc and g++ than gcc/g++ 9, you must change the following variables
-set(CMAKE_C_COMPILER /usr/bin/aarch64-linux-gnu-gcc-9)
-set(CMAKE_CXX_COMPILER /usr/bin/aarch64-linux-gnu-g++-9)
+# if you use other version of gcc and g++ than gcc/g++ 13, you must change the following variables
+set(CMAKE_C_COMPILER /usr/bin/aarch64-linux-gnu-gcc-13)
+set(CMAKE_CXX_COMPILER /usr/bin/aarch64-linux-gnu-g++-13)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -I${TARGET_SYSROOT}/usr/include")
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS}")

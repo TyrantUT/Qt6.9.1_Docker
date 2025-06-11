@@ -21,70 +21,70 @@ function build_qtpi () {
 
     pushd "$BUILD_TARGET_PI"
 
-    "$SRC_DIR"/configure -qpa eglfs \
-            -confirm-license \
-            -release \
-            -qt-host-path /build/qt-host \
-            -device-option CROSS_COMPILE=aarch64-linux-gnu- \
-            -device linux-rasp-pi4-aarch64 \
-            -eglfs \
-            -extprefix /build/qt-raspi \
-            -prefix /usr/local/qt6 \
-            -pkg-config \
-            -qt-pcre \
-            -no-pch \
-            -evdev \
-            -system-freetype \
-            -fontconfig \
-            -glib \
-            -make libs \
-            -no-cups \
-            -no-gtk \
-            -no-use-gold-linker \
-            -nomake examples \
-            -nomake tests \
-            -opensource \
-            -skip qttools \
-            -skip qtdoc \
-            -skip qttranslations \
-            -skip qtwebchannel \
-            -skip qtwebengine \
-            -skip qtwebview \
-            -skip qtsensors \
-            -skip qtvirtualkeyboard \
-            -skip qtwebchannel \
-            -skip qtspeech \
-            -skip qtsql \
-            -skip qtdbus \
-            -skip qtxml \
-            -skip qtjpeg \
-            -skip qtlanguageserver \
-            -skip qtwebsockets \
-            -skip qthttpserver \
-            -skip qtserialport \
-            -skip qtpositioning \
-            -skip qtlocation \
-            -skip qtlottie \
-            -skip qtmqtt \
-            -skip qtremoteobjects \
-            -skip qtserialbus \
-            -skip qtsvg \
-            -skip qtwayland \
-            -skip qtcoap \
-            -skip qt5compat \
-            -skip qtconnectivity \
-            -skip qtrpc=OFF \
-            -skip qtimageformats \
-            -skip qtopcua \
-            -skip qtnetworkauth \
-            -skip qtactiveqt \
-            -skip qtgrpc \
-            -skip qtscxml \
-            -sysroot /sysroot \
-            -- -DCMAKE_TOOLCHAIN_FILE=/build/toolchain.cmake \
-                -DQT_FEATURE_xcb=ON \
-                -DFEATURE_xcb_xlib=ON \
-                -DQT_FEATURE_xlib=ON
+    cmake $SRC_DIR -GNinja \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DINPUT_opengl=es2 \
+        -DQT_BUILD_EXAMPLES=OFF \
+        -DQT_BUILD_TESTS=OFF \
+        -DQT_HOST_PATH=/build/qt-host \
+        -DCMAKE_STAGING_PREFIX=/build/qt-raspi \
+        -DCMAKE_INSTALL_PREFIX=/usr/local/qt6 \
+        -DCMAKE_PREFIX_PATH=/build/qt-host/lib/cmake \
+        -DCMAKE_TOOLCHAIN_FILE=/build/toolchain.cmake \
+        -DQT_QMAKE_TARGET_MKSPEC=devices/linux-rasp-pi4-aarch64 \
+        -DCMAKE_SYSROOT=/sysroot \
+        -DQT_QPA_DEFAULT_PLATFORM=eglfs \
+        -DQT_FEATURE_eglfs=ON \
+        -DQT_FEATURE_xcb=ON \
+        -DFEATURE_xcb_xlib=ON \
+        -DQT_FEATURE_xlib=ON \
+        -DQT_FEATURE_opensource=ON \
+        -DQT_FEATURE_pkg_config=ON \
+        -DQT_FEATURE_pcre2=ON \
+        -DQT_FEATURE_precompiled_headers=OFF \
+        -DQT_FEATURE_evdev=ON \
+        -DQT_FEATURE_system_freetype=ON \
+        -DQT_FEATURE_fontconfig=ON \
+        -DQT_FEATURE_glib=ON \
+        -DQT_FEATURE_cups=OFF \
+        -DQT_FEATURE_gtk3=OFF \
+        -DQT_FEATURE_gold_linker=OFF \
+        -DBUILD_qttools=OFF \
+        -DBUILD_qtdoc=OFF \
+        -DBUILD_qttranslations=OFF \
+        -DBUILD_qtwebchannel=OFF \
+        -DBUILD_qtwebengine=OFF \
+        -DBUILD_qtwebview=OFF \
+        -DBUILD_qtsensors=OFF \
+        -DBUILD_qtvirtualkeyboard=OFF \
+        -DBUILD_qtspeech=OFF \
+        -DBUILD_qtsql=OFF \
+        -DBUILD_qtdbus=OFF \
+        -DBUILD_qtxml=OFF \
+        -DBUILD_qtimageformats=OFF \
+        -DQT_FEATURE_jpeg=OFF \
+        -DBUILD_qtlanguageserver=OFF \
+        -DBUILD_qtwebsockets=OFF \
+        -DBUILD_qthttpserver=OFF \
+        -DBUILD_qtserialport=OFF \
+        -DBUILD_qtpositioning=OFF \
+        -DBUILD_qtlocation=OFF \
+        -DBUILD_qtlottie=OFF \
+        -DBUILD_qtmqtt=OFF \
+        -DBUILD_qtremoteobjects=OFF \
+        -DBUILD_qtserialbus=OFF \
+        -DBUILD_qtsvg=OFF \
+        -DBUILD_qtwayland=OFF \
+        -DBUILD_qtcoap=OFF \
+        -DBUILD_qt5compat=OFF \
+        -DBUILD_qtconnectivity=OFF \
+        -DBUILD_qtrpc=OFF \
+        -DBUILD_qtopcua=OFF \
+        -DBUILD_qtnetworkauth=OFF \
+        -DBUILD_qtactiveqt=OFF \
+        -DBUILD_qtgrpc=OFF \
+        -DBUILD_qtscxml=OFF \
+        -DCMAKE_CXX_FLAGS="-O2"
 
 
     /usr/games/cowsay -f tux "Making QT Pi version $QT_BRANCH_MAJOR.$QT_BRANCH_MINOR."
