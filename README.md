@@ -11,11 +11,11 @@ This guide explains how to cross-compile Qt 6.9.1 for Raspberry Pi using Docker.
 
 ## Directory Setup
 
-Create directories to store the build artifacts:
+Create directories to store the Raspberry Pi Qt Build:
 ```bash
 mkdir -p build
 ```
-- `build/`: Stores the cross-compiled Qt 6.9.1 tar.gz archive.
+- `build/`: Stores the Raspberry Pi cross-compiled Qt 6.9.1 tar.gz archive.
 
 ## Step-by-Step Instructions
 
@@ -32,7 +32,7 @@ docker build -f Dockerfile.host -t qt-crosscompile-host:pre-compile-6.9.1 . --lo
 Run the host container to compile Qt 6.9.1. This step prepares the host environment for cross-compilation.
 
 ```bash
-docker run qt-crosscompile-host:pre-compile-6.9.1
+docker run -it qt-crosscompile-host:pre-compile-6.9.1 /usr/local/bin/build_qt6Host.sh
 ```
 
 ### 3. Commit the Host Container to a New Image
@@ -44,25 +44,16 @@ After compilation, commit the container to a new image to preserve the compiled 
 docker ps -a
 
 # Commit the container (replace {CONTAINER_ID} with the actual ID)
-docker commit {CONTAINER_ID} qt-crosscompile-host:post-compile-6.9.1
+docker commit {CONTAINER_ID} qt-crosscompile-host:host-compile-6.9.1
 ```
 
-### 4. Build the Raspberry Pi Docker Image
-
-Build the Docker image for cross-compiling Qt 6.9.1 for the Raspberry Pi.
-
-```bash
-docker build -f Dockerfile.rpi -t qt-crosscompile-rpi:pre-compile-6.9.1 . --load
-```
-
-### 5. Cross-Compile Qt 6.9.1 for Raspberry Pi
+### 4. Cross-Compile Qt 6.9.1 for Raspberry Pi
 
 Run the Raspberry Pi container to perform the cross-compilation. Mount the `build/` directory to store the output tar.gz file.
 
 ```bash
-docker run \
-  --mount type=bind,source="$(pwd)/build",target=/build \
-  qt-crosscompile-rpi:pre-compile-6.9.1
+docker run -it --mount type=bind,source="$(pwd)/build",target=/build \
+  qt-crosscompile-host:host-compile-6.9.1 /usr/local/bin/build_qt6Rpi.sh
 ```
 
 ## Output
