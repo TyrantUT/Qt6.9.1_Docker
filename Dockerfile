@@ -49,7 +49,7 @@ COPY --from=rpi-sysroot /usr/lib/ /sysroot/usr/lib/
 
 COPY build_qt6Host.sh /usr/local/bin/
 COPY build_qt6Rpi.sh /usr/local/bin/
-COPY toolchain.cmake /usr/local/bin/
+COPY toolchain.cmake /build
 RUN chmod +x /usr/local/bin/build_qt6Host.sh
 RUN chmod +x /usr/local/bin/build_qt6Rpi.sh
 

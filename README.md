@@ -24,7 +24,7 @@ mkdir -p built
 Build the Docker image for the host environment, which sets up the necessary tools and dependencies for compiling Qt.
 
 ```bash
-docker build -f Dockerfile -t qt-crosscompile-host:pre-compile-6.9.1 . --load
+docker build -f Dockerfile -t qt-crosscompile-host:pre-compile-6.9.1 .
 ```
 
 ### 2. Compile Qt 6.9.1 for the Host
