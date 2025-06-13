@@ -11,7 +11,9 @@ QT_BRANCH_MINOR="1"
 DEBIAN_VERSION=$(lsb_release -cs)
 MAKE_CORES="$(expr $(nproc))"
 BUILD_TARGET_PI=/build/qtpi-build
+BUILT_TARGET_PI=/built
 
+mkdir -p "$BUILT_TARGET_PI"
 mkdir -p "$BUILD_TARGET_PI"
 
 /usr/games/cowsay -f tux "Building QT version $QT_BRANCH_MAJOR.$QT_BRANCH_MINOR."
@@ -24,19 +26,12 @@ function build_qtpi () {
     cmake $SRC_DIR -GNinja \
         -DCMAKE_BUILD_TYPE=Release \
         -DINPUT_opengl=es2 \
-        -DQT_BUILD_EXAMPLES=OFF \
-        -DQT_BUILD_TESTS=OFF \
-        -DQT_HOST_PATH=/build/qt-host \
-        -DCMAKE_STAGING_PREFIX=/build/qt-raspi \
-        -DCMAKE_INSTALL_PREFIX=/usr/local/qt6 \
-        -DCMAKE_PREFIX_PATH=/build/qt-host/lib/cmake \
-        -DCMAKE_TOOLCHAIN_FILE=/build/toolchain.cmake \
-        -DQT_QMAKE_TARGET_MKSPEC=devices/linux-rasp-pi4-aarch64 \
-        -DCMAKE_SYSROOT=/sysroot \
-        -DQT_QPA_DEFAULT_PLATFORM=eglfs \
+        -DQT_FEATURE_kms=ON \
+        -DQT_FEATURE_opengles2=ON \
+        -DQT_FEATURE_opengles3=ON \
+        -DQT_FEATURE_jpeg=OFF \
         -DQT_FEATURE_eglfs=ON \
         -DQT_FEATURE_xcb=ON \
-        -DFEATURE_xcb_xlib=ON \
         -DQT_FEATURE_xlib=ON \
         -DQT_FEATURE_opensource=ON \
         -DQT_FEATURE_pkg_config=ON \
@@ -49,6 +44,11 @@ function build_qtpi () {
         -DQT_FEATURE_cups=OFF \
         -DQT_FEATURE_gtk3=OFF \
         -DQT_FEATURE_gold_linker=OFF \
+        -DQT_BUILD_EXAMPLES=OFF \
+        -DQT_BUILD_TESTS=OFF \
+        -DQT_QPA_DEFAULT_PLATFORM=eglfs \
+        -DFEATURE_xcb_xlib=ON \
+        -DBUILD_WITH_PCH=OFF \
         -DBUILD_qttools=OFF \
         -DBUILD_qtdoc=OFF \
         -DBUILD_qttranslations=OFF \
@@ -62,7 +62,6 @@ function build_qtpi () {
         -DBUILD_qtdbus=OFF \
         -DBUILD_qtxml=OFF \
         -DBUILD_qtimageformats=OFF \
-        -DQT_FEATURE_jpeg=OFF \
         -DBUILD_qtlanguageserver=OFF \
         -DBUILD_qtwebsockets=OFF \
         -DBUILD_qthttpserver=OFF \
@@ -84,6 +83,14 @@ function build_qtpi () {
         -DBUILD_qtactiveqt=OFF \
         -DBUILD_qtgrpc=OFF \
         -DBUILD_qtscxml=OFF \
+        -DQT_HOST_PATH=/build/qt-host \
+        -DCMAKE_STAGING_PREFIX=/build/qt-raspi \
+        -DCMAKE_INSTALL_PREFIX=/usr/local/qt6 \
+        -DCMAKE_PREFIX_PATH=/build/qt-host/lib/cmake \
+        -DCMAKE_TOOLCHAIN_FILE=/build/toolchain.cmake \
+        -DQT_QMAKE_TARGET_MKSPEC=devices/linux-rasp-pi4-aarch64 \
+        -DCMAKE_SYSROOT=/sysroot \
+        -DQT_AVOID_CMAKE_ARCHIVING_API=ON \
         -DCMAKE_CXX_FLAGS="-O2"
 
 
@@ -96,10 +103,10 @@ function build_qtpi () {
     popd
 
     pushd "$SRC_DIR"
-    tar cfz "$BUILD_TARGET_PI/qt6-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR-$DEBIAN_VERSION-$1.tar.gz" qt6pi
+    tar cfz "$BUILT_TARGET_PI/qt6-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR-$DEBIAN_VERSION-$1.tar.gz" qt6pi
     popd
 
-    pushd "$BUILD_TARGET_PI"
+    pushd "$BUILT_TARGET_PI"
     sha256sum "qt6-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR-$DEBIAN_VERSION-$1.tar.gz" > "qt6-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR-$DEBIAN_VERSION-$1.tar.gz.sha256"
     popd
 }
