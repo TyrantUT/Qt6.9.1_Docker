@@ -59,7 +59,6 @@ function build_qtpi () {
         -DBUILD_qtvirtualkeyboard=OFF \
         -DBUILD_qtspeech=OFF \
         -DBUILD_qtsql=OFF \
-        -DBUILD_qtdbus=OFF \
         -DBUILD_qtxml=OFF \
         -DBUILD_qtimageformats=OFF \
         -DBUILD_qtlanguageserver=OFF \

@@ -69,7 +69,6 @@ function configure_qt () {
             -DBUILD_qtvirtualkeyboard=OFF \
             -DBUILD_qtspeech=OFF \
             -DBUILD_qtsql=OFF \
-            -DBUILD_qtdbus=OFF \
             -DBUILD_qtxml=OFF \
             -DBUILD_qtimageformats=OFF \
             -DQT_FEATURE_jpeg=OFF \
