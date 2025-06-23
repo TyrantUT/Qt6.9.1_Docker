@@ -34,8 +34,10 @@ function fetch_qt6 () {
         popd
     else
         echo "DO NOTHING"
+        
+        popd
     fi
-    popd
+
 }
 
 function configure_qt () {
