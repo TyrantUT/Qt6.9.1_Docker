@@ -21,14 +21,14 @@ function fetch_qt6 () {
 
     /usr/games/cowsay -f tux "Fetching QT $QT_BRANCH_MAJOR.$QT_BRANCH_MINOR."
     
-    local SRC_DIR="$SRC"
-    pushd $SRC_DIR
+    local SRC_DIR="$SRC/qt6"
+    pushd $SRC
 
     if [ ! -d "$SRC_DIR" ]; then
         mkdir -p "$SRC_DIR"
 
         wget -q --progress=bar:force:noscroll --show-progress "https://download.qt.io/official_releases/qt/$QT_BRANCH_MAJOR/$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR/single/qt-everywhere-src-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR.tar.xz"
-        pv qt-everywhere-src-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR.tar.xz | tar xpJ -C "$SRC_DIR/qt6" --strip-components=1
+        pv qt-everywhere-src-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR.tar.xz | tar xpJ -C "$SRC_DIR" --strip-components=1
         rm qt-everywhere-src-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR.tar.xz
 
         popd
