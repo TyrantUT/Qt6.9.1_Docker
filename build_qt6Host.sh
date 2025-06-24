@@ -99,6 +99,7 @@ function configure_qt () {
             -DBUILD_qtdatavis3d=OFF \
             -DBUILD_qtquick3dphysics=OFF \
             -DBUILD_qtquickeffectmaker=OFF \
+            -DBUILD_qtgraphs=OFF \
             -DCMAKE_CXX_FLAGS="-O2"
 
         touch "$TAG_FILE"
