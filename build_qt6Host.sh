@@ -34,7 +34,7 @@ function fetch_qt6 () {
         popd
     else
         echo "DO NOTHING"
-        
+
         popd
     fi
 
@@ -92,6 +92,13 @@ function configure_qt () {
             -DBUILD_qtactiveqt=OFF \
             -DBUILD_qtgrpc=OFF \
             -DBUILD_qtscxml=OFF \
+            -DBUILD_qtquicktimeline=OFF \
+            -DBUILD_qtquick3d=OFF \
+            -DBUILD_qtmultimedia=OFF \
+            -DBUILD_qt3d=OFF \
+            -DBUILD_qtdatavis3d=OFF \
+            -DBUILD_qtquick3dphysics=OFF \
+            -DBUILD_qtquickeffectmaker=OFF \
             -DCMAKE_CXX_FLAGS="-O2"
 
         touch "$TAG_FILE"

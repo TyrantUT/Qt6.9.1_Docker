@@ -82,6 +82,13 @@ function build_qtpi () {
         -DBUILD_qtactiveqt=OFF \
         -DBUILD_qtgrpc=OFF \
         -DBUILD_qtscxml=OFF \
+        -DBUILD_qtquicktimeline=OFF \
+        -DBUILD_qtquick3d=OFF \
+        -DBUILD_qtmultimedia=OFF \
+        -DBUILD_qt3d=OFF \
+        -DBUILD_qtdatavis3d=OFF \
+        -DBUILD_qtquick3dphysics=OFF \
+        -DBUILD_qtquickeffectmaker=OFF \
         -DQT_HOST_PATH=/build/qt-host \
         -DCMAKE_STAGING_PREFIX=/build/qt-raspi \
         -DCMAKE_INSTALL_PREFIX=/usr/local/qt6 \
