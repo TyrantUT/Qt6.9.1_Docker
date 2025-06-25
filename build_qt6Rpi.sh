@@ -110,11 +110,11 @@ function build_qtpi () {
     popd
 
     pushd "$SRC_DIR"
-    tar cfz "$BUILT_TARGET_PI/qt6-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR-$DEBIAN_VERSION-$1.tar.gz" qt6pi
+    tar cfz "$BUILT_TARGET_PI/qt6pi-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR-$DEBIAN_VERSION.tar.gz" qt6pi
     popd
 
     pushd "$BUILT_TARGET_PI"
-    sha256sum "qt6-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR-$DEBIAN_VERSION-$1.tar.gz" > "qt6-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR-$DEBIAN_VERSION-$1.tar.gz.sha256"
+    sha256sum "qt6-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR-$DEBIAN_VERSION-$1.tar.gz" > "qt6pi-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR-$DEBIAN_VERSION.tar.gz.sha256"
     popd
 }
 
