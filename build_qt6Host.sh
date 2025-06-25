@@ -50,9 +50,9 @@ function configure_qt () {
     if [ ! -f "$TAG_FILE" ]; then
 
         # Modify paths for build process
-        wget -K https://raw.githubusercontent.com/riscv/riscv-poky/master/scripts/sysroot-relativelinks.py -P /usr/local/bin
+        wget --no-check-certificate https://raw.githubusercontent.com/riscv/riscv-poky/master/scripts/sysroot-relativelinks.py -P /usr/local/bin
         chmod +x /usr/local/bin/sysroot-relativelinks.py
-        
+
         /usr/local/bin/sysroot-relativelinks.py /sysroot
 
         cmake "$SRC_DIR" -GNinja \
