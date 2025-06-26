@@ -67,17 +67,21 @@ function configure_qt () {
             -DBUILD_qtwebengine=OFF \
             -DBUILD_qtwebview=OFF \
             -DBUILD_qtsensors=OFF \
+            -DBUILD_qtandroidextras=OFF \
+            -DBUILD_qtgamepad=OFF \
+            -DBUILD_qtmacextras=OFF \
+            -DBUILD_qtwinextras=OFF \
+            -DBUILD_qtpurchasing=OFF \
             -DBUILD_qtvirtualkeyboard=OFF \
+            -DBUILD_qttools=OFF \
             -DBUILD_qtspeech=OFF \
             -DBUILD_qtsql=OFF \
             -DBUILD_qtxml=OFF \
             -DBUILD_qtimageformats=OFF \
-            -DQT_FEATURE_jpeg=OFF \
             -DBUILD_qtlanguageserver=OFF \
             -DBUILD_qtwebsockets=OFF \
             -DBUILD_qthttpserver=OFF \
             -DBUILD_qtserialport=OFF \
-            -DBUILD_qtpositioning=OFF \
             -DBUILD_qtlocation=OFF \
             -DBUILD_qtlottie=OFF \
             -DBUILD_qtmqtt=OFF \
@@ -85,6 +89,7 @@ function configure_qt () {
             -DBUILD_qtserialbus=OFF \
             -DBUILD_qtsvg=OFF \
             -DBUILD_qtwayland=OFF \
+            -DBUILD_wayland=OFF \
             -DBUILD_qtcoap=OFF \
             -DBUILD_qt5compat=OFF \
             -DBUILD_qtconnectivity=OFF \
@@ -94,13 +99,8 @@ function configure_qt () {
             -DBUILD_qtactiveqt=OFF \
             -DBUILD_qtgrpc=OFF \
             -DBUILD_qtscxml=OFF \
-            -DBUILD_qtquicktimeline=OFF \
-            -DBUILD_qtquick3d=OFF \
             -DBUILD_qtmultimedia=OFF \
-            -DBUILD_qt3d=OFF \
-            -DBUILD_qtdatavis3d=OFF \
             -DBUILD_qtquick3dphysics=OFF \
-            -DBUILD_qtquickeffectmaker=OFF \
             -DBUILD_qtgraphs=OFF \
             -DCMAKE_CXX_FLAGS="-O2"
 
