@@ -91,8 +91,6 @@ function build_qtpi () {
         -DBUILD_qtquick3dphysics=OFF \
         -DBUILD_qtgraphs=OFF \
         -DQT_DEBUG_FIND_PACKAGE=ON \
-        -DQt6_DIR=/usr/local/qt6/6.9.1/gcc_64/lib/cmake/Qt6 \
-        -DQT_ADDITIONAL_PACKAGES_PREFIX_PATH=/usr/local/qt6/6.9.1/gcc_64 \
         -DQT_HOST_PATH=/build/qt-host \
         -DCMAKE_STAGING_PREFIX=/build/qt-raspi \
         -DCMAKE_INSTALL_PREFIX=/usr/local/qt6 \
