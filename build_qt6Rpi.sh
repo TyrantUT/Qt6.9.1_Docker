@@ -87,6 +87,7 @@ function build_qtpi () {
         -DBUILD_qtactiveqt=OFF \
         -DBUILD_qtgrpc=OFF \
         -DBUILD_qtscxml=OFF \
+        -DBUILD_qt3d=OFF \
         -DBUILD_qtquick3dphysics=OFF \
         -DBUILD_qtgraphs=OFF \
         -DQT_DEBUG_FIND_PACKAGE=ON \
