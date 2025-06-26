@@ -49,7 +49,6 @@ function build_qtpi () {
         -DQT_QPA_DEFAULT_PLATFORM=eglfs \
         -DFEATURE_xcb_xlib=ON \
         -DBUILD_WITH_PCH=OFF \
-        -DBUILD_qttools=OFF \
         -DBUILD_qtdoc=OFF \
         -DBUILD_qttranslations=OFF \
         -DBUILD_qtwebchannel=OFF \

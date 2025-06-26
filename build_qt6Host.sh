@@ -61,7 +61,6 @@ function configure_qt () {
             -DINPUT_opengl=es2 \
             -DQT_BUILD_TESTS=OFF \
             -DCMAKE_INSTALL_PREFIX=/build/qt-host \
-            -DBUILD_qttools=OFF \
             -DBUILD_qtdoc=OFF \
             -DBUILD_qttranslations=OFF \
             -DBUILD_qtwebchannel=OFF \
