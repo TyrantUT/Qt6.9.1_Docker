@@ -99,7 +99,6 @@ function configure_qt () {
             -DBUILD_qtactiveqt=OFF \
             -DBUILD_qtgrpc=OFF \
             -DBUILD_qtscxml=OFF \
-            -DBUILD_qtmultimedia=OFF \
             -DBUILD_qtquick3dphysics=OFF \
             -DBUILD_qtgraphs=OFF \
             -DCMAKE_CXX_FLAGS="-O2"
