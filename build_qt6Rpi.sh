@@ -111,7 +111,7 @@ function build_qtpi () {
 
     pushd "$BUILT_TARGET_PI"
     tar cfz "qt6pi-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR-$DEBIAN_VERSION.tar.gz" /build/qt-raspi  
-    sha256sum "qt6-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR-$DEBIAN_VERSION-$1.tar.gz" > "qt6pi-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR-$DEBIAN_VERSION.tar.gz.sha256"
+    sha256sum "qt6pi-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR-$DEBIAN_VERSION.tar.gz" > "qt6pi-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR-$DEBIAN_VERSION.tar.gz.sha256"
     popd
 }
 
