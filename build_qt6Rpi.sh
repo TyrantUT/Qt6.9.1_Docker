@@ -96,7 +96,7 @@ function build_qtpi () {
         -DCMAKE_INSTALL_PREFIX=/usr/local/qt6 \
         -DCMAKE_PREFIX_PATH=/build/qt-host/lib/cmake \
         -DCMAKE_TOOLCHAIN_FILE=/build/toolchain.cmake \
-        -DQT_QMAKE_TARGET_MKSPEC=linux-rasp-pi4-aarch64 \
+        -DQT_QMAKE_TARGET_MKSPEC=devices/linux-rasp-pi4-aarch64 \
         -DCMAKE_SYSROOT=/sysroot \
         -DQT_AVOID_CMAKE_ARCHIVING_API=ON \
         -DCMAKE_CXX_FLAGS="-O2"
