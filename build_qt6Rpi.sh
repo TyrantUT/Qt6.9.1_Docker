@@ -110,10 +110,11 @@ function build_qtpi () {
     cmake --install .
     popd
 
-    pushd "$BUILT_TARGET_PI"
-    tar cfz "qt6pi-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR-$DEBIAN_VERSION.tar.gz" /build/qt-raspi  
-    sha256sum "qt6pi-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR-$DEBIAN_VERSION.tar.gz" > "qt6pi-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR-$DEBIAN_VERSION.tar.gz.sha256"
+    pushd /build
+    tar cfz "$BUILT_TARGET_PI/qt6pi-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR-$DEBIAN_VERSION.tar.gz" qt-raspi
+    sha256sum "$BUILT_TARGET_PI/qt6pi-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR-$DEBIAN_VERSION.tar.gz" > "$BUILT_TARGET_PI/qt6pi-$QT_BRANCH_MAJOR.$QT_BRANCH_MINOR-$DEBIAN_VERSION.tar.gz.sha256"
     popd
+
 }
 
 build_qtpi
