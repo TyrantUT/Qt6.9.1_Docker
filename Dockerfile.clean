@@ -1,0 +1,47 @@
+FROM qt-crosscompile-host:post-compile-6.9.1 as base
+
+RUN apt update && \
+    apt install -y --no-install-recommends apt-utils && \
+    apt install -y wget gnupg \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN wget -O- http://archive.raspberrypi.org/debian/raspberrypi.gpg.key | \
+    gpg --dearmor | tee /etc/apt/keyrings/raspberrypi.gpg > /dev/null \
+    && chmod 644 /etc/apt/keyrings/raspberrypi.gpg \
+    && echo "deb [signed-by=/etc/apt/keyrings/raspberrypi.gpg] http://archive.raspberrypi.org/debian/ bookworm main" >> /etc/apt/sources.list \
+    && sed -i '/^Types:/ s/\<deb\>\(.*\)\(\<deb-src\>\)\?/\0 deb-src/' /etc/apt/sources.list.d/debian.sources \
+    && apt update
+
+RUN apt install -y pigpio
+
+FROM debian:bookworm
+
+LABEL maintain="christopher.radoumis@gmail.com"
+LABEL description="Qt 6 cross-compiler Docker image for Raspberry Pi (arm64)"
+
+ENV DEBIAN_FRONTEND='noninteractive'
+
+RUN sed -i '/^Types:/ s/\<deb\>\(.*\)\(\<deb-src\>\)\?/\0 deb-src/' /etc/apt/sources.list.d/debian.sources \
+        && apt-get update
+
+RUN apt install -y \
+        cmake \
+        gcc-aarch64-linux-gnu \
+        g++-aarch64-linux-gnu \
+        libglib2.0-dev \
+        libdouble-conversion-dev \
+        && apt autoremove --purge -y \
+        && apt clean -y \
+        && rm -rf /var/lib/apt/lists/* \
+        && rm -rf /tmp/* /var/tmp/* \
+        && mkdir -p /sysroot /build/qt-host /build/qt-raspi
+
+WORKDIR /build
+
+COPY --from=base /lib/ /sysroot/lib/
+COPY --from=base /usr/include/ /sysroot/usr/include/
+COPY --from=base /usr/lib/ /sysroot/usr/lib/
+COPY --from=base /sysroot/ /sysroot/
+COPY --from=base /build/qt-host /build/qt-host
+COPY --from=base /build/qt-raspi /build/qt-raspi
+COPY --from=base /build/toolchain.cmake /build/
