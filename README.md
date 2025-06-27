@@ -56,6 +56,17 @@ docker run -it --mount type=bind,source="$(pwd)/built",target=/built \
   qt-crosscompile-host:host-compile-6.9.1 /usr/local/bin/build_qt6Rpi.sh
 ```
 
+### 5. Commit Build environment
+
+After compilation, commit the container to a new image to preserve the environment.
+```bash
+# Find the container ID
+docker ps -a
+
+# Commit the container (replace {CONTAINER_ID} with the actual ID)
+docker commit {CONTAINER_ID} qt-crosscompile-host:post-compile-6.9.1
+```
 ## Output
 
 - The `built/` directory will contain the cross-compiled Qt 6.9.1 tar.gz archive.
+- Use the new qt-crosscompile-host:post-compile-6.9.1 image to compile Qt projects
