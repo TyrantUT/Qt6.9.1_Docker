@@ -1,19 +1,5 @@
-FROM qt-crosscompile-host:post-compile-6.9.1 as base
-
-RUN apt update && \
-    apt install -y --no-install-recommends apt-utils && \
-    apt install -y wget gnupg \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN wget -O- http://archive.raspberrypi.org/debian/raspberrypi.gpg.key | \
-    gpg --dearmor | tee /etc/apt/keyrings/raspberrypi.gpg > /dev/null \
-    && chmod 644 /etc/apt/keyrings/raspberrypi.gpg \
-    && echo "deb [signed-by=/etc/apt/keyrings/raspberrypi.gpg] http://archive.raspberrypi.org/debian/ bookworm main" >> /etc/apt/sources.list \
-    && sed -i '/^Types:/ s/\<deb\>\(.*\)\(\<deb-src\>\)\?/\0 deb-src/' /etc/apt/sources.list.d/debian.sources \
-    && apt update
-
-RUN apt install -y pigpio
-
+FROM qt-crosscompile-host:pre-compile-6.9.1 as sysroot
+FROM qt-crosscompile-host:post-compile-6.9.1 as build
 FROM debian:bookworm
 
 LABEL maintain="christopher.radoumis@gmail.com"
@@ -38,10 +24,7 @@ RUN apt install -y \
 
 WORKDIR /build
 
-COPY --from=base /lib/ /sysroot/lib/
-COPY --from=base /usr/include/ /sysroot/usr/include/
-COPY --from=base /usr/lib/ /sysroot/usr/lib/
-COPY --from=base /sysroot/ /sysroot/
-COPY --from=base /build/qt-host /build/qt-host
-COPY --from=base /build/qt-raspi /build/qt-raspi
-COPY --from=base /build/toolchain.cmake /build/
+COPY --from=sysroot /sysroot/ /sysroot/
+COPY --from=build /build/qt-host /build/qt-host
+COPY --from=build /build/qt-raspi /build/qt-raspi
+COPY --from=build /build/toolchain.cmake /build/
